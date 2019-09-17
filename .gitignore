@@ -11,3 +11,10 @@ __pycache__/
 environments/
 node_modules/
 yarn.lock
+.vscode/
+.env
+.envrc
+get-poetry.py
+pyproject.toml
+test.py
+testdir/

@@ -1,6 +1,6 @@
 name: dotrun
 base: core18
-version: '0.2.4'
+version: '1.0.0-rc1'
 summary: A command-line tool for running projects
 description: |
   A command-line tool for running projects
@@ -9,11 +9,6 @@ grade: stable
 confinement: devmode
 
 parts:
-  system-packages:
-    plugin: nil
-    stage-packages:
-      - python3-pip
-
   node:
     plugin: dump
     source: https://deb.nodesource.com/node_12.x/pool/main/n/nodejs/nodejs_12.4.0-1nodesource1_amd64.deb
@@ -24,6 +19,20 @@ parts:
 
   dotrun-module:
     plugin: python
+    stage-packages:
+      - python3-pip
+      - python3-dev
+      - curl
+      - build-essential
+      - libpq-dev
+      - libsodium-dev
+      - libjpeg-dev
+      - zlib1g-dev
+      - libpng-dev
+      - libmagickwand-dev
+      - libjpeg-progs
+      - optipng
+      - bundler
     source: .
 
 apps:
@@ -34,3 +43,5 @@ apps:
       - network
       - network-bind
       - process-control
+    environment:
+      LC_ALL: C.UTF-8
