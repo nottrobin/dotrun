@@ -8,6 +8,11 @@ description: |
 grade: stable
 confinement: devmode
 
+environment:
+  GEM_HOME: $HOME/.gem
+  GEM_PATH: $HOME/.gem:$SNAP/lib/ruby/gems/2.7.0
+  RUBYLIB: $SNAP/lib/ruby/2.7.0:$SNAP/lib/ruby/2.7.0/$SNAP_ARCH:$RUBYLIB
+
 parts:
   node:
     plugin: dump
@@ -32,7 +37,8 @@ parts:
       - libmagickwand-dev
       - libjpeg-progs
       - optipng
-      - bundler
+    stage-snaps:
+      - ruby
     source: .
 
 apps:

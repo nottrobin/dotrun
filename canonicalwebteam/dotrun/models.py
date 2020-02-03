@@ -96,6 +96,10 @@ class Project:
             cprint(f"[ Removing node dependencies (`node_modules`) ]", "cyan")
             shutil.rmtree("node_modules")
 
+        if os.path.isdir("vendor"):
+            cprint(f"[ Removing gems (`vendor`) ]", "cyan")
+            shutil.rmtree("vendor")
+
         if os.path.isdir(self.pyenv_path):
             cprint(
                 f"[ Removing python environment (`{self.pyenv_path}`) ]",
@@ -152,6 +156,9 @@ class Project:
 
             if exit_on_error:
                 sys.exit(1)
+        except Exception as error:
+            import ipdb; ipdb.set_trace()
+            pass
 
         print("")
 
@@ -206,7 +213,7 @@ class Project:
 
             yarn_state["packages"] = self._get_installed_yarn_packages()
 
-            if self.state["yarn"] == yarn_state:
+            if yarn_state["packages"] and self.state["yarn"] == yarn_state:
                 cprint("up to date", "magenta")
             else:
                 cprint("changes detected", "magenta")
@@ -267,11 +274,11 @@ class Project:
             self._call(["virtualenv", self.pyenv_path])
             cprint("done", "magenta")
 
-        python_state = {"snap_revision": snap_revision}
+        py_state = {"snap_revision": snap_revision}
 
         with open(f"{self.path}/requirements.txt", "r") as requirements_file:
             cprint("- Reading requirements.txt", "magenta")
-            python_state["requirements"] = requirements_file.read()
+            py_state["requirements"] = requirements_file.read()
 
         if not force:
             cprint(
@@ -280,9 +287,9 @@ class Project:
                 end="",
             )
 
-            python_state["packages"] = self._get_installed_python_packages()
+            py_state["packages"] = self._get_installed_python_packages()
 
-            if self.state["python"] == python_state:
+            if py_state["packages"] and self.state["python"] == py_state:
                 cprint("up to date", "magenta")
             else:
                 changes = True
@@ -298,8 +305,8 @@ class Project:
                 ["pip3", "install", "--requirement", "requirements.txt"]
             )
             self._call(["pip3", "install", "ipdb"])
-            python_state["packages"] = self._get_installed_python_packages()
-            self.state["python"] = python_state
+            py_state["packages"] = self._get_installed_python_packages()
+            self.state["python"] = py_state
 
     # Ruby dependencies
 
@@ -343,7 +350,7 @@ class Project:
 
             ruby_state["gems"] = self._get_installed_gems()
 
-            if self.state["ruby"] == ruby_state:
+            if ruby_state["gems"] and self.state["ruby"] == ruby_state:
                 cprint("up to date", "magenta")
             else:
                 cprint("changes detected", "magenta")
